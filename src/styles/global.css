@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ßß
+.invalid-input {
+  border: 2px solid red !important;
+}
