@@ -1,5 +1,5 @@
 module.exports = {
-  content: ['./src/**/*.{astro,html,js,jsx,ts,tsx,vue}'], // paths to all of your files
+  content: ['./src/**/*.{astro,html,js,jsx,ts,tsx,vue}'],
   theme: {
     extend: {
       // Extend the default Tailwind styles here
