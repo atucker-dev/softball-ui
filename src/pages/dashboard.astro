@@ -1,0 +1,33 @@
+---
+// Frontmatter script space, where you can import components or write JavaScript
+---
+
+<html>
+  <head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body class="bg-gray-100">
+    <main
+      class="flex flex-col items-center justify-center min-h-screen"
+    >
+      <div class="w-full max-w-2xl p-8 bg-white rounded-lg shadow-md">
+        <h1 class="mb-6 text-3xl font-bold text-center text-gray-800">
+          Dashboard
+        </h1>
+        <div class="flex justify-between space-x-4">
+          <a
+            href="/coach-dashboard"
+            class="inline-flex items-center justify-center w-1/2 h-32 px-4 py-2 text-xl font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700"
+            >Coach Dashboard</a
+          >
+          <a
+            href="/player-dashboard"
+            class="inline-flex items-center justify-center w-1/2 h-32 px-4 py-2 text-xl font-bold text-white bg-green-500 rounded-md hover:bg-green-700"
+            >Player Dashboard</a
+          >
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
