@@ -8,13 +8,44 @@
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body class="bg-gray-100">
+    <header class="bg-white shadow">
+      <nav
+        class="container mx-auto px-6 py-3 flex justify-between items-center"
+      >
+        <a
+          href="/dashboard"
+          class="text-xl font-semibold text-gray-800"
+          >Softball Stat Tracker</a
+        >
+        <div class="flex items-center">
+          <a
+            href="/profile"
+            class="text-gray-800 text-sm mr-4 hover:underline"
+            >Profile</a
+          >
+          <a
+            href="/logout"
+            class="text-gray-800 text-sm mr-4 hover:underline"
+            >Logout</a
+          >
+          <button
+            id="darkModeToggle"
+            class="bg-gray-200 text-gray-800 px-3 py-1 rounded cursor-pointer"
+            >Dark Mode</button
+          >
+        </div>
+      </nav>
+    </header>
     <main
       class="flex flex-col items-center justify-center min-h-screen"
     >
       <div class="w-full max-w-2xl p-8 bg-white rounded-lg shadow-md">
-        <h1 class="mb-6 text-3xl font-bold text-center text-gray-800">
-          Dashboard
+        <h1 class="mb-4 text-3xl font-bold text-center text-gray-800">
+          Welcome, Jack
         </h1>
+        <div class="mb-6 text-lg text-center text-gray-600">
+          Your Dashboard
+        </div>
         <div class="flex justify-between space-x-4">
           <a
             href="/coach-dashboard"
@@ -29,5 +60,18 @@
         </div>
       </div>
     </main>
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark');
+                darkModeToggle.textContent = document.body.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
+            });
+        } else {
+            console.error('Dark mode toggle button not found');
+        }
+    </script>
+
   </body>
 </html>
