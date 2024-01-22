@@ -141,8 +141,14 @@
 
       function validateName(nameElement: HTMLInputElement) {
         const name = nameElement.value.trim();
+        const maxLength = 50; // Maximum length for names
+
         if (name.length === 0) {
           alert('Name cannot be empty.');
+          nameElement.classList.add('invalid-input');
+          return false;
+        } else if (name.length > maxLength) {
+          alert(`Name cannot exceed ${maxLength} characters.`);
           nameElement.classList.add('invalid-input');
           return false;
         } else {
