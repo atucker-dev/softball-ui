@@ -8,25 +8,12 @@
     <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body class="bg-gray-100">
-    <main
-      class="flex flex-col items-center justify-center min-h-screen"
-    >
+    <main class="flex flex-col items-center justify-center min-h-screen">
       <div class="w-full max-w-xs p-8 bg-white rounded-lg shadow-md">
-        <h1 class="mb-6 text-2xl font-bold text-center text-gray-800">
-          Signup
-        </h1>
-        <form
-          id="signupForm"
-          method="POST"
-          action="/api/signup"
-          class="space-y-6"
-        >
+        <h1 class="mb-6 text-2xl font-bold text-center text-gray-800">Signup</h1>
+        <form id="signupForm" method="POST" action="/api/signup" class="space-y-6">
           <div>
-            <label
-              for="firstName"
-              class="block text-sm font-medium text-gray-700"
-              >First Name:</label
-            >
+            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name:</label>
             <input
               type="text"
               id="firstName"
@@ -36,11 +23,7 @@
             />
           </div>
           <div>
-            <label
-              for="lastName"
-              class="block text-sm font-medium text-gray-700"
-              >Last Name:</label
-            >
+            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name:</label>
             <input
               type="text"
               id="lastName"
@@ -50,11 +33,7 @@
             />
           </div>
           <div>
-            <label
-              for="username"
-              class="block text-sm font-medium text-gray-700"
-              >Username:</label
-            >
+            <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
             <input
               type="text"
               id="username"
@@ -64,11 +43,7 @@
             />
           </div>
           <div>
-            <label
-              for="email"
-              class="block text-sm font-medium text-gray-700"
-              >Email:</label
-            >
+            <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
             <input
               type="email"
               id="email"
@@ -78,11 +53,7 @@
             />
           </div>
           <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-gray-700"
-              >Password:</label
-            >
+            <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
             <input
               type="password"
               id="password"
@@ -92,11 +63,7 @@
             />
           </div>
           <div>
-            <label
-              for="passwordConfirm"
-              class="block text-sm font-medium text-gray-700"
-              >Confirm Password:</label
-            >
+            <label for="passwordConfirm" class="block text-sm font-medium text-gray-700">Confirm Password:</label>
             <input
               type="password"
               id="passwordConfirm"
@@ -105,18 +72,10 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
           </div>
-          <button
-            type="submit"
-            class="w-full px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700"
-            >Signup</button
-          >
+          <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700">Signup</button>
         </form>
         <p class="mt-4 text-sm text-center text-gray-600">
-          Already have an account? <a
-            href="/login"
-            class="font-medium text-blue-500 hover:text-blue-700"
-            >Login</a
-          >
+          Already have an account? <a href="/login" class="font-medium text-blue-500 hover:text-blue-700">Login</a>
         </p>
       </div>
     </main>
@@ -131,11 +90,11 @@
       const signupFormElement = document.getElementById('signupForm') as HTMLFormElement;
 
       // Add event listeners if elements exist
-      firstNameElement?.addEventListener('blur', event => validateName(event.target as HTMLInputElement));
-      lastNameElement?.addEventListener('blur', event => validateName(event.target as HTMLInputElement));
+      firstNameElement?.addEventListener('blur', (event) => validateName(event.target as HTMLInputElement));
+      lastNameElement?.addEventListener('blur', (event) => validateName(event.target as HTMLInputElement));
       emailElement?.addEventListener('blur', validateEmail);
       usernameElement?.addEventListener('blur', validateUsername);
-      passwordElement?.addEventListener('blur', validatePasswords);
+      // Only add event listener to passwordConfirmElement for blur event
       passwordConfirmElement?.addEventListener('blur', validatePasswords);
       signupFormElement?.addEventListener('submit', validateForm);
 
@@ -201,6 +160,15 @@
 
         const password = passwordElement.value;
         const passwordConfirm = passwordConfirmElement.value;
+
+        // Check the length of the password
+        if (password.length < 8 || password.length > 64) {
+          alert('Password must be between 8 and 64 characters.');
+          passwordElement.classList.add('invalid-input');
+          return false;
+        }
+
+        // Check if passwords match
         if (password !== passwordConfirm) {
           alert('Passwords do not match.');
           passwordElement.classList.add('invalid-input');
@@ -232,8 +200,6 @@
         }
         return true;
       }
-
     </script>
-
   </body>
 </html>
