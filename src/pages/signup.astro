@@ -6,6 +6,19 @@
   <head>
     <title>Signup</title>
     <link rel="stylesheet" href="/src/styles/global.css" />
+    <style>
+      .error-message {
+        color: red;
+        font-size: 0.875rem; /* 14px */
+        margin-top: 0.25rem; /* 4px */
+        display: none;
+      }
+
+      .invalid-input {
+        border-color: red;
+        box-shadow: 0 0 0 1px red;
+      }
+    </style>
   </head>
   <body class="bg-gray-100">
     <main class="flex flex-col items-center justify-center min-h-screen">
@@ -21,6 +34,7 @@
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
+            <span id="firstNameError" class="error-message"></span>
           </div>
           <div>
             <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name:</label>
@@ -31,6 +45,7 @@
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
+            <span id="lastNameError" class="error-message"></span>
           </div>
           <div>
             <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
@@ -41,6 +56,7 @@
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
+            <span id="usernameError" class="error-message"></span>
           </div>
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
@@ -51,6 +67,7 @@
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
+            <span id="emailError" class="error-message">Invalid email address.</span>
           </div>
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
@@ -61,6 +78,7 @@
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
+            <span id="passwordError" class="error-message"></span>
           </div>
           <div>
             <label for="passwordConfirm" class="block text-sm font-medium text-gray-700">Confirm Password:</label>
@@ -71,6 +89,7 @@
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
+            <span id="passwordConfirmError" class="error-message"></span>
           </div>
           <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700">Signup</button>
         </form>
@@ -79,126 +98,155 @@
         </p>
       </div>
     </main>
+
     <script>
-      // Get elements with proper type assertions
-      const firstNameElement = document.getElementById('firstName') as HTMLInputElement;
-      const lastNameElement = document.getElementById('lastName') as HTMLInputElement;
-      const emailElement = document.getElementById('email') as HTMLInputElement;
-      const usernameElement = document.getElementById('username') as HTMLInputElement;
-      const passwordElement = document.getElementById('password') as HTMLInputElement;
-      const passwordConfirmElement = document.getElementById('passwordConfirm') as HTMLInputElement;
-      const signupFormElement = document.getElementById('signupForm') as HTMLFormElement;
+      const firstNameElement = document.getElementById('firstName') as HTMLInputElement | null;
+      const lastNameElement = document.getElementById('lastName') as HTMLInputElement | null;
+      const emailElement = document.getElementById('email') as HTMLInputElement | null;
+      const usernameElement = document.getElementById('username') as HTMLInputElement | null;
+      const passwordElement = document.getElementById('password') as HTMLInputElement | null;
+      const passwordConfirmElement = document.getElementById('passwordConfirm') as HTMLInputElement | null;
+      const signupFormElement = document.getElementById('signupForm') as HTMLFormElement | null;
 
-      // Add event listeners if elements exist
-      firstNameElement?.addEventListener('blur', (event) => validateName(event.target as HTMLInputElement));
-      lastNameElement?.addEventListener('blur', (event) => validateName(event.target as HTMLInputElement));
-      emailElement?.addEventListener('blur', validateEmail);
-      usernameElement?.addEventListener('blur', validateUsername);
-      // Only add event listener to passwordConfirmElement for blur event
-      passwordConfirmElement?.addEventListener('blur', validatePasswords);
-      signupFormElement?.addEventListener('submit', validateForm);
+      const firstNameError = document.getElementById('firstNameError') as HTMLSpanElement | null;
+      const lastNameError = document.getElementById('lastNameError') as HTMLSpanElement | null;
+      const emailError = document.getElementById('emailError') as HTMLSpanElement | null;
+      const usernameError = document.getElementById('usernameError') as HTMLSpanElement | null;
+      const passwordError = document.getElementById('passwordError') as HTMLSpanElement | null;
+      const passwordConfirmError = document.getElementById('passwordConfirmError') as HTMLSpanElement | null;
 
-      function validateName(nameElement: HTMLInputElement) {
+      firstNameElement?.addEventListener('blur', () => validateName(firstNameElement, firstNameError));
+      lastNameElement?.addEventListener('blur', () => validateName(lastNameElement, lastNameError));
+      emailElement?.addEventListener('blur', () => validateEmail(emailElement, emailError));
+      usernameElement?.addEventListener('blur', () => validateUsername(usernameElement, usernameError));
+      passwordElement?.addEventListener('blur', () => validatePassword(passwordElement, passwordError));
+      passwordConfirmElement?.addEventListener('blur', () => validatePasswordConfirm(passwordElement, passwordConfirmElement, passwordConfirmError));
+      if (signupFormElement) {
+        signupFormElement.addEventListener('submit', validateForm);
+      } else {
+        console.error('Signup form not found');
+      }
+
+      function validateName(nameElement: HTMLInputElement | null, errorElement: HTMLSpanElement | null): boolean {
+        if (!nameElement || !errorElement) return false;
+
         const name = nameElement.value.trim();
-        const maxLength = 50; // Maximum length for names
+        const maxLength = 50;
 
         if (name.length === 0) {
-          alert('Name cannot be empty.');
+          errorElement.innerText = 'Name cannot be empty.';
+          errorElement.style.display = 'block';
           nameElement.classList.add('invalid-input');
           return false;
         } else if (name.length > maxLength) {
-          alert(`Name cannot exceed ${maxLength} characters.`);
+          errorElement.innerText = `Name cannot exceed ${maxLength} characters.`;
+          errorElement.style.display = 'block';
           nameElement.classList.add('invalid-input');
           return false;
         } else {
+          errorElement.style.display = 'none';
           nameElement.classList.remove('invalid-input');
         }
         return true;
       }
 
-      function validateEmail() {
-        if (!emailElement) {
-          console.error('Email element not found');
-          return false;
-        }
+      function validateEmail(emailElement: HTMLInputElement | null, errorElement: HTMLSpanElement | null): boolean {
+        if (!emailElement || !errorElement) return false;
 
         const email = emailElement.value;
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!re.test(email)) {
-          alert('Please enter a valid email address.');
+          errorElement.innerText = 'Please enter a valid email address.';
+          errorElement.style.display = 'block';
           emailElement.classList.add('invalid-input');
           return false;
         } else {
+          errorElement.style.display = 'none';
           emailElement.classList.remove('invalid-input');
         }
         return true;
       }
 
-      function validateUsername() {
-        if (!usernameElement) {
-          console.error('Username element not found');
-          return false;
-        }
+      function validateUsername(usernameElement: HTMLInputElement | null, errorElement: HTMLSpanElement | null): boolean {
+        if (!usernameElement || !errorElement) return false;
 
         const username = usernameElement.value;
         const re = /^[a-zA-Z0-9._-]{4,32}$/;
         if (!re.test(username)) {
-          alert('Username must be 4-32 characters and can only contain letters, numbers, ".", "-", and "_".');
+          errorElement.innerText = 'Username must be 4-32 characters and can only contain letters, numbers, ".", "-", and "_".';
+          errorElement.style.display = 'block';
           usernameElement.classList.add('invalid-input');
           return false;
         } else {
+          errorElement.style.display = 'none';
           usernameElement.classList.remove('invalid-input');
         }
         return true;
       }
 
-      function validatePasswords() {
-        if (!passwordElement || !passwordConfirmElement) {
-          console.error('Password elements not found');
-          return false;
-        }
+      function validatePassword(passwordElement: HTMLInputElement | null, errorElement: HTMLSpanElement | null): boolean {
+        if (!passwordElement || !errorElement) return false;
 
         const password = passwordElement.value;
-        const passwordConfirm = passwordConfirmElement.value;
-
-        // Check the length of the password
         if (password.length < 8 || password.length > 64) {
-          alert('Password must be between 8 and 64 characters.');
+          errorElement.innerText = 'Password must be between 8 and 64 characters.';
+          errorElement.style.display = 'block';
           passwordElement.classList.add('invalid-input');
-          return false;
-        }
-
-        // Check if passwords match
-        if (password !== passwordConfirm) {
-          alert('Passwords do not match.');
-          passwordElement.classList.add('invalid-input');
-          passwordConfirmElement.classList.add('invalid-input');
           return false;
         } else {
+          errorElement.style.display = 'none';
           passwordElement.classList.remove('invalid-input');
-          passwordConfirmElement.classList.remove('invalid-input');
         }
         return true;
       }
 
-      function validateForm(event: Event) {
-        if (!firstNameElement || !lastNameElement || !emailElement || !usernameElement || !passwordElement || !passwordConfirmElement) {
+      function validatePasswordConfirm(
+        passwordElement: HTMLInputElement | null,
+        passwordConfirmElement: HTMLInputElement | null,
+        errorElement: HTMLSpanElement | null
+      ): boolean {
+        if (!passwordElement || !passwordConfirmElement || !errorElement) return false;
+
+        const password = passwordElement.value;
+        const passwordConfirm = passwordConfirmElement.value;
+
+        if (password !== passwordConfirm) {
+          errorElement.innerText = 'Passwords do not match.';
+          errorElement.style.display = 'block';
+          passwordConfirmElement.classList.add('invalid-input');
+          return false; // This should prevent form submission
+        } else {
+          errorElement.style.display = 'none';
+          passwordConfirmElement.classList.remove('invalid-input');
+          return true;
+        }
+      }
+
+      function validateForm(event: Event): void {
+        if (
+          !signupFormElement ||
+          !firstNameElement ||
+          !lastNameElement ||
+          !emailElement ||
+          !usernameElement ||
+          !passwordElement ||
+          !passwordConfirmElement
+        ) {
           console.error('Form elements not found');
           event.preventDefault(); // Prevent form submission
-          return false;
+          return;
         }
 
-        const isValidFirstName = validateName(firstNameElement);
-        const isValidLastName = validateName(lastNameElement);
-        const isValidEmail = validateEmail();
-        const isValidUsername = validateUsername();
-        const doPasswordsMatch = validatePasswords();
+        const isValidFirstName = validateName(firstNameElement, firstNameError);
+        const isValidLastName = validateName(lastNameElement, lastNameError);
+        const isValidEmail = validateEmail(emailElement, emailError);
+        const isValidUsername = validateUsername(usernameElement, usernameError);
+        const isValidPassword = validatePassword(passwordElement, passwordError);
+        const doPasswordsMatch = validatePasswordConfirm(passwordElement, passwordConfirmElement, passwordConfirmError);
 
-        if (!isValidFirstName || !isValidLastName || !isValidEmail || !isValidUsername || !doPasswordsMatch) {
+        if (!isValidFirstName || !isValidLastName || !isValidEmail || !isValidUsername || !isValidPassword || !doPasswordsMatch) {
           event.preventDefault(); // Prevent form submission
-          return false;
         }
-        return true;
       }
     </script>
   </body>
